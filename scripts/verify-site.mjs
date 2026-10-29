@@ -1,6 +1,7 @@
 import { spawn, spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { verifyContact } from "./verify-contact.mjs";
 
 const base = process.env.QA_BASE_URL ?? "http://127.0.0.1:3016";
 const session = `casa-fv-check-${process.pid}`;
@@ -25,7 +26,7 @@ function check(label, expression) {
 }
 
 try {
-  try { await fetch(base); } catch {
+  try { await (await fetch(base)).arrayBuffer(); } catch {
     ownedServer = spawn("npm", ["run", "start"], { stdio: "ignore" });
     let ready = false;
     for (let i = 0; i < 40; i++) {
@@ -36,6 +37,7 @@ try {
   }
   const response = await fetch(base);
   if (!response.ok) throw new Error(`Homepage returned ${response.status}`);
+  await response.arrayBuffer();
   for (const file of ["CASA-Foerderverein-Infokarte.pdf", "CASA-Foerderverein-Brand-Guide.pdf"]) {
     const response = await fetch(`${base}/downloads/${file}`);
     const data = new Uint8Array(await response.arrayBuffer());
@@ -63,9 +65,9 @@ try {
   cli("snapshot");
   cli("run-code", 'async (page) => { await page.getByRole("button", { name: "Menü", exact: true }).click(); }');
   cli("snapshot");
-  cli("run-code", 'async (page) => { await page.getByRole("navigation", { name: "Mobile Hauptnavigation" }).getByRole("link", { name: "Unsere Vorhaben" }).click(); }');
+  cli("run-code", 'async (page) => { await page.getByRole("navigation", { name: "Mobile Hauptnavigation" }).getByRole("link", { name: "Vorhaben", exact: true }).click(); }');
   check("Navigation closes menu and reaches planned programmes", 'location.hash === "#vorhaben" && document.querySelector(".menu-toggle")?.getAttribute("aria-expanded") === "false"');
-  check("Plans are clearly labelled and do not accept applications", 'document.querySelector("#vorhaben").textContent.includes("In Planung") && document.querySelector("#vorhaben").textContent.includes("In Erarbeitung") && document.querySelector("#vorhaben").textContent.includes("Ein Anmeldestart steht noch nicht fest") && !document.querySelector("form")');
+  check("Plans are clearly labelled and do not accept applications", 'document.querySelector("#vorhaben").textContent.includes("In Planung") && document.querySelector("#vorhaben").textContent.includes("In Erarbeitung") && document.querySelector("#vorhaben").textContent.includes("Ein Anmeldestart steht noch nicht fest") && !document.querySelector("#vorhaben form")');
   cli("snapshot");
   cli("run-code", 'async (page) => { const download=page.waitForEvent("download"); await page.locator(\'a[download]\').click(); const file=await download; if(!file.suggestedFilename().endsWith(".pdf")) throw new Error("Expected PDF download"); }');
   evidence.push({ check: "Browser information-card download", passed: true });
@@ -78,6 +80,20 @@ try {
   cli("snapshot");
   cli("run-code", `async (page) => { const context=await page.context().browser().newContext({ javaScriptEnabled:false }); const noJs=await context.newPage(); await noJs.goto(${JSON.stringify(base)}); if(!await noJs.locator("#verein h2").isVisible() || !await noJs.locator("#vorhaben article").first().isVisible()) throw new Error("Content must remain visible without JavaScript"); await context.close(); }`);
   evidence.push({ check: "Core content without JavaScript", passed: true });
+  check("Footer and mobile reading text have readable sizes", 'parseFloat(getComputedStyle(document.querySelector(".site-footer a")).fontSize)>=15 && parseFloat(getComputedStyle(document.querySelector(".intro-copy p:not(.lead)")).fontSize)>=16');
+  cli("snapshot");
+  cli("run-code", 'async (page) => { await page.getByRole("navigation",{name:"Hauptnavigation",exact:true}).getByRole("link",{name:"Partner werden",exact:true}).click(); }');
+  check("Anchor scroll uses a single header offset and moves focus", 'Math.abs(document.querySelector("#partner-werden").getBoundingClientRect().top-document.querySelector(".site-header").getBoundingClientRect().height-24)<3 && document.activeElement.id==="partner-werden"');
+  await verifyContact({ base,cli,check,evidence });
+  cli("resize", "1440", "1000");
+  cli("set-reduced-motion", "no-preference");
+  cli("goto", base);
+  cli("snapshot");
+  cli("run-code", 'async (page) => { await page.getByRole("navigation",{name:"Hauptnavigation",exact:true}).getByRole("link",{name:"Partner werden",exact:true}).click(); await page.waitForTimeout(140); const position=await page.evaluate(()=>({y:scrollY,target:document.querySelector("#partner-werden").getBoundingClientRect().top+scrollY})); if(position.y<=0 || position.y>=position.target-150) throw new Error("Expected an intermediate eased scroll position"); await page.mouse.wheel(0,-1); await page.waitForTimeout(60); const stopped=await page.evaluate(()=>scrollY); await page.waitForTimeout(220); if(Math.abs((await page.evaluate(()=>scrollY))-stopped)>5) throw new Error("User wheel input must cancel scrolling"); }');
+  evidence.push({ check: "Eased anchor movement is interruptible with the wheel", passed: true });
+  cli("set-reduced-motion", "reduce");
+  cli("goto", base);
+  cli("screenshot", "--filename", "output/playwright/desktop-1440.png");
   writeFileSync("output/playwright/verification.json", JSON.stringify({ base, evidence }, null, 2));
   console.log(`${evidence.length} checks passed.`);
 } finally {

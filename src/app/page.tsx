@@ -1,6 +1,7 @@
 import { Header } from "@/components/site/header";
 import { Motion } from "@/components/site/motion";
 import { OpenSpace } from "@/components/brand/open-space";
+import { ContactButton } from "@/components/site/contact";
 
 function Arrow({ down = false }: { down?: boolean }) {
   return <span aria-hidden="true" className="arrow">{down ? "↓" : "↗"}</span>;
@@ -73,11 +74,27 @@ export default function Home() {
         <div className="values" data-reveal><p>Offen.<br />Ehrlich.<br />Respektvoll.</p><div><span className="eyebrow">So wird Miteinander gelebt.</span><p>Ob es um Lernfragen, die Wohnungssuche, die Berufs- oder Studienplanung geht: Der Schulalltag bei CASA ist von zugewandter Kommunikation und persönlicher Unterstützung geprägt.</p></div></div>
       </section>
 
+      <section id="partner-werden" className="partner-section" aria-labelledby="partner-title">
+        <div className="section container">
+          <p className="section-index" data-reveal><span className="square" />06 / Gemeinsam in Bremen</p>
+          <div className="partner-intro" data-reveal>
+            <h2 id="partner-title">Ihr Beitrag.<br /><span className="muted-heading">Mehr Möglichkeiten.</span></h2>
+            <div><p className="lead">Helfen Sie mit, mehr Menschen das Sprachenlernen zu ermöglichen.</p><p>Als Unternehmen, Initiative oder Privatperson in Bremen und umzu können Sie etwas bewegen. Mit Zeit, Wissen, Ressourcen oder einer Idee, die wir gemeinsam weiterdenken.</p><ContactButton className="primary-action partner-main-action">Partner werden <Arrow /></ContactButton></div>
+          </div>
+          <div className="partner-paths" data-reveal>
+            <ContactButton className="partner-path" topic="sprachbildung"><span className="partner-path-number">01</span><span><strong>Sprachbildung ermöglichen.</strong><span>Gemeinsam über Lernwege und künftige Förderung sprechen.</span></span><Arrow /></ContactButton>
+            <ContactButton className="partner-path" topic="zeit"><span className="partner-path-number">02</span><span><strong>Zeit und Wissen teilen.</strong><span>Erfahrung einbringen, Menschen begegnen, Verbindungen schaffen.</span></span><Arrow /></ContactButton>
+            <ContactButton className="partner-path" topic="ausstattung"><span className="partner-path-number">03</span><span><strong>Material und Technik weitergeben.</strong><span>Eine Idee für Lernmaterialien oder digitale Ausstattung besprechen.</span></span><Arrow /></ContactButton>
+          </div>
+          <p className="partner-invitation" data-reveal>Es braucht nicht gleich einen fertigen Plan. Ein erstes Gespräch reicht.</p>
+        </div>
+      </section>
+
       <section id="mehr-erfahren" className="closing" aria-labelledby="mehr-title">
-        <div className="section container closing-inner"><div data-reveal><p className="section-index">Gemeinsam weiterdenken</p><h2 id="mehr-title">Geben wir<br />Miteinander Raum.</h2><p>Entdecken Sie, wofür der CASA-Förderverein steht.</p><a href="/downloads/CASA-Foerderverein-Infokarte.pdf" className="download-link" download>Den Verein im Überblick <span>PDF herunterladen <Arrow /></span></a></div><OpenSpace className="closing-space" /></div>
+        <div className="section container closing-inner"><div data-reveal><p className="section-index">Ein Gespräch ist ein Anfang.</p><h2 id="mehr-title">Lassen Sie uns<br />Miteinander<br className="closing-break" /> weiterdenken.</h2><p>Telefonisch, per Video oder persönlich in Bremen.<br />Fragen Sie ein Kennenlernen an und erzählen Sie uns von Ihrer Idee.</p><ContactButton className="primary-action closing-contact">Gespräch anfragen <Arrow /></ContactButton><a href="/downloads/CASA-Foerderverein-Infokarte.pdf" className="download-link" download>Den Verein im Überblick <span>Infokarte als PDF <Arrow /></span></a></div><OpenSpace className="closing-space" /></div>
       </section>
     </main>
-    <footer className="site-footer container"><p>CASA Förderverein e.V.</p><a href="https://www.casa-bremen.de" target="_blank" rel="noopener noreferrer">Zur CASA-Sprachschule <Arrow /></a><a href="#start">Zurück nach oben ↑</a></footer>
+    <footer className="site-footer container"><div><p>CASA Förderverein e.V.</p><span>In Bremen verwurzelt. Für Menschen offen.</span></div><nav aria-label="Fußnavigation"><ContactButton className="footer-contact">Gespräch anfragen <Arrow /></ContactButton><a href="https://www.casa-bremen.de" target="_blank" rel="noopener noreferrer">Zur CASA-Sprachschule <Arrow /></a><a href="/datenschutz">Datenschutzhinweise</a><a href="#start">Zurück nach oben ↑</a></nav></footer>
     <Motion />
   </>;
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { ContactProvider } from "@/components/site/contact";
 import "./globals.css";
+import "./contact.css";
 
 const manrope = localFont({
   src: "../../public/fonts/Manrope-Variable.ttf",
@@ -24,5 +26,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="de" className={manrope.variable}><body>{children}</body></html>;
+  return <html lang="de" className={manrope.variable}><body><ContactProvider>{children}</ContactProvider></body></html>;
 }

@@ -9,12 +9,14 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "node scripts/verify-site.mjs",
-    "test:e2e": "node scripts/verify-site.mjs"
+    "test:e2e": "node scripts/verify-site.mjs",
+    "enquiries": "node scripts/enquiries.mjs"
   },
   "dependencies": {
     "next": "16.4.3",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@playwright/cli": "0.1.22",

@@ -2,11 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/brand/logo";
+import { ContactButton } from "@/components/site/contact";
 
 const links = [
   ["#verein", "Der Verein"],
-  ["#vorhaben", "Unsere Vorhaben"],
+  ["#vorhaben", "Vorhaben"],
   ["#begegnung", "Begegnung"],
+  ["#partner-werden", "Partner werden"],
 ] as const;
 
 export function Header() {
@@ -31,14 +33,15 @@ export function Header() {
         </a>
         <nav className="desktop-nav" aria-label="Hauptnavigation">
           {links.map(([href, title]) => <a key={href} href={href}>{title}</a>)}
-          <a className="nav-action" href="#mehr-erfahren">Mehr erfahren <span aria-hidden="true">↗</span></a>
+          <ContactButton className="nav-action">Gespräch anfragen <span aria-hidden="true">↗</span></ContactButton>
         </nav>
         <button ref={trigger} className="menu-toggle" aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen(!open)}>
           {open ? "Schließen" : "Menü"}<span aria-hidden="true">{open ? "−" : "+"}</span>
         </button>
       </div>
       {open && <nav className="mobile-nav" id="mobile-navigation" aria-label="Mobile Hauptnavigation">
-        {[...links, ["#mehr-erfahren", "Mehr erfahren"]].map(([href, title]) => <a key={href} href={href} onClick={() => setOpen(false)}>{title}<span aria-hidden="true">↗</span></a>)}
+        {links.map(([href, title]) => <a key={href} href={href} onClick={() => setOpen(false)}>{title}<span aria-hidden="true">↗</span></a>)}
+        <ContactButton className="mobile-contact-action" onClick={() => setOpen(false)}>Gespräch anfragen <span aria-hidden="true">↗</span></ContactButton>
       </nav>}
     </header>
   );

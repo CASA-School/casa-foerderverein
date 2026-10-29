@@ -7,6 +7,7 @@ The original user copy, approved branding kit and project brief are preserved he
 
 ```sh
 npm install
+cp -n .env.example .env.local
 npm run dev
 ```
 
@@ -18,7 +19,7 @@ For a production preview, run `npm run build` and then `npm run start`.
 The public frontend follows CASA's current versions: Next.js 16.4.3 App Router,
 React 19.2.4, TypeScript, Tailwind CSS 4, ESLint and Playwright. The site uses
 Server Components with small client islands for navigation and scroll reveals.
-Manrope is served locally. No database or credentials are needed.
+Manrope is served locally. No external database or credentials are needed for the local preview.
 
 ## Source and direction
 
@@ -32,7 +33,57 @@ The homepage covers the association, access to learning, planned B1 preparation
 and scholarships, the school's meeting spaces and individual learning support.
 The information-card download is a real PDF from the kit.
 
-## Verification — 2026-10-29
+## Partnership enquiries — local preview
+
+The user requested larger reading sizes, smoother anchor navigation, a Bremen
+partnership invitation, and an interactive company/individual contact popup.
+The user explicitly chose **local preview only** for delivery.
+
+The three-step popup collects support interests, contact/organisation details,
+regional connection, and a call/video/in-person meeting preference. A requested
+date and time window are preferences, not confirmed calendar availability.
+It validates answers, supports back navigation and keyboard use, and preserves
+the answers when a request fails. The original animated logo is unchanged.
+
+With `CONTACT_PREVIEW_ENABLED=true` in the ignored `.env.local`, the server saves
+each accepted enquiry to `.local/enquiries/<requestId>.json` with private file
+permissions. Duplicate retries return the original receipt. The form states that
+the information is saved locally; no email is sent and no meeting is booked.
+The endpoint fails closed without the explicit preview flag. There is no public
+read endpoint. This data folder is ignored by Git and excluded from server tracing.
+
+To review saved enquiries locally:
+
+```sh
+npm run enquiries
+```
+
+This prints private contact information to the local terminal. The website does
+not expose an enquiry listing. Automated checks remove only their own synthetic
+fixtures and do not delete other saved enquiries.
+
+The old project's reusable content and its verification limits are documented in
+[the reference review](docs/REFERENCE-REVIEW.md). Before going live, configure
+the real delivery/storage workflow and complete the legal and privacy information.
+PayPal and actual calendar bookings are intentionally deferred.
+
+## Verification — 2026-10-30
+
+- `npm run lint`: passed without warnings.
+- `npm run typecheck`: passed.
+- `npm run build`: passed without warnings, including the contact API and privacy route.
+- `npm run test:e2e`: passed, **55 checks** against the production preview.
+- Checks cover responsive layouts, readable type, a single sticky-header scroll
+  offset, interruptible eased scrolling, reduced motion, native keyboard/focus
+  behaviour, company/private-person paths, validation, failed-request recovery,
+  real local persistence, duplicate retries, and PDF downloads.
+- An additional isolated-server check confirmed that contact capture returns 503
+  when the preview flag is disabled. The API's output trace excludes `.local/`.
+- Desktop partnership/footer and desktop/mobile popup screenshots were visually reviewed.
+- All four required gates ran. `npm test` aliases the same browser suite; no
+  separate unit framework was added. Notes-only updates did not repeat the gates.
+
+## Initial verification — 2026-10-29
 
 - `npm run build`: passed; homepage, icon and robots routes prerendered.
 - `npm run lint`: passed without warnings after the config correction.
@@ -52,7 +103,8 @@ They reuse a running preview on port 3016 or start a built preview for the check
 
 This is a local preview, with `noindex` metadata and a robots exclusion. Association
 contact, imprint and privacy information must be verified before public launch.
-There are no donation, application or contact forms and no invented contact details.
+The partnership contact form captures local preview enquiries only. There are no
+donation or application forms, outbound messages or invented contact details.
 No hosting, domain or GitHub configuration has been created.
 
 ## Codex organization

@@ -4,6 +4,7 @@ node_modules/
 out/
 .env*
 !.env.example
+.local/
 .DS_Store
 playwright-report/
 test-results/

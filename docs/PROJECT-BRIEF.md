@@ -30,6 +30,9 @@ visible if JavaScript is disabled.
 - The school, not the association, has the supplied 40-year/80-nation context.
 - No invented donation workflow, IBAN, contact person, board or register number.
 - No newsletter, analytics, tracking, third-party fonts, registration or fake form.
+- Local-only partnership enquiries were authorized on 2026-10-30. The popup saves
+  contact and meeting preferences privately on this laptop, with clear preview
+  messaging. It does not send mail, book appointments, or accept payments.
 - The information-card download is a real supplied PDF.
 
 ## Before publication
