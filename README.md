@@ -64,11 +64,11 @@ The user requested a new project and transfer of the existing design chat
 
 The user added this folder to Codex. Registered project ID:
 `fdff1abc-2987-43b1-be7e-60edce9e7e28` (`casa-foerderverein`).
-The tool attempted to move the original chat and returned `confirmation_required`
-because it has the original CASA school folder as an additional source. Codex
-requires the user to move this chat through the sidebar to approve that access.
-Computer control of Codex itself is also blocked. Preserve this chat rather
-than creating another one; verify its project membership after the sidebar move.
+The user completed the sidebar source-folder consent step. The app tool then
+successfully moved the original chat into this project. The complete branding
+and design history is preserved; no replacement chat was created. Use this
+repository explicitly as the working directory, even if an older chat tool
+still reports the original CASA folder as a source.
 
 The older Vite project at `/Users/rahmanshafiee/Documents/CASA Verein` and the
 CASA school repository were not modified.
