@@ -1,0 +1,6 @@
+*.pdf binary
+*.png binary
+*.ttf binary
+*.otf binary
+OFL.txt -whitespace
+docs/branding/kit/** -whitespace

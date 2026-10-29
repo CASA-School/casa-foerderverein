@@ -1,0 +1,126 @@
+{
+  "01_Logos/CASA-Foerderverein-Dark-Background.png": {
+    "bytes": 1253376,
+    "sha256": "cffa9fe31e5aee7a798ebcb6a0e5516611e7c95a635c37412fc0ab50daea907e"
+  },
+  "01_Logos/CASA-Foerderverein-Primary-Transparent.png": {
+    "bytes": 235132,
+    "sha256": "5ad6ea3e53036b50d0103ddf340f6934c8ff780d43dc2abcb35e8a35138216d7"
+  },
+  "02_Guide/CASA-Foerderverein-Brand-Guide.pdf": {
+    "bytes": 1476544,
+    "sha256": "8524d2acab9da428e190ea1113113d006ec5abf60fbe26ef1dd5f4742ce82800"
+  },
+  "02_Guide/CASA-Foerderverein-Brand-Overview.pdf": {
+    "bytes": 457679,
+    "sha256": "73b3ad2e7d78e56d00f43bc2182cdcb14e824c8ed1f245bc7f8d040817f99de9"
+  },
+  "03_Digital/Alt-Texte.txt": {
+    "bytes": 594,
+    "sha256": "2ae912479ccf20f22d6b5eb4cd58941cda4382efbc4d588dd526ccd9e22d642f"
+  },
+  "03_Digital/CASA-Avatar-1080.png": {
+    "bytes": 75098,
+    "sha256": "ab1571ef640b7c4d09f6e2344649b963ce61397c4e2272311260b1d6070c713f"
+  },
+  "03_Digital/CASA-Banner-1200x630.png": {
+    "bytes": 51358,
+    "sha256": "0bab58891ce1c79f321f21655c3c2a55d207a1b36cf5e0feeb05a735f8ed6286"
+  },
+  "03_Digital/CASA-Social-01-Miteinander-1080.png": {
+    "bytes": 70255,
+    "sha256": "afd23c2d1da172765562a4af8c8d51b2931408507c481ae2f7b034db0dc08be2"
+  },
+  "03_Digital/CASA-Social-02-Aufeinander-1080.png": {
+    "bytes": 65733,
+    "sha256": "095c3186a0a829a77edf77097adedf436fe84d8611373b4b71093c3e322e732a"
+  },
+  "03_Digital/CASA-Story-1080x1920.png": {
+    "bytes": 92945,
+    "sha256": "4b18cd0ed5495375e42c1d0c3d43c4ee7c059a85d4238b61c1f13e282fc5ac00"
+  },
+  "04_Print/A3-Vorschau.png": {
+    "bytes": 47021,
+    "sha256": "7fbf2c8fae97e64a5e702f473a704732e9a35588acf10bcc851a0067782c3337"
+  },
+  "04_Print/A6-Vorschau-1.png": {
+    "bytes": 65369,
+    "sha256": "f23614848737a2286c5c8c548c34c6229693c0d70b84381760d86c0393678ea2"
+  },
+  "04_Print/A6-Vorschau-2.png": {
+    "bytes": 80573,
+    "sha256": "70ad316cb09df6887de90e435fdf3aa5c8a8a7f50361cf2c40877e7c81ae88e4"
+  },
+  "04_Print/CASA-Foerderverein-Infokarte-A6-3mm-Beschnitt.pdf": {
+    "bytes": 271665,
+    "sha256": "ddf9cdb4c7307f5321fd20cafd6ab10b7b06cb2e100242e3d45fc4f6ab6b4151"
+  },
+  "04_Print/CASA-Foerderverein-Poster-A3-3mm-Beschnitt.pdf": {
+    "bytes": 270301,
+    "sha256": "9cc8dd40de3ccb3f6270ec0f915b7386bc61c5b32b283abfc83f836ef54eb21a"
+  },
+  "05_Fonts/Manrope-Light.ttf": {
+    "bytes": 97484,
+    "sha256": "fd448298abef8be01a51a6f7a5b4ed5be243255cd793668c1f7155d524a090ea"
+  },
+  "05_Fonts/Manrope-Medium.ttf": {
+    "bytes": 97672,
+    "sha256": "a2d30b94404058acf297a51110f7bc258e027b0f193bcc6e0efba43d25f3dfc6"
+  },
+  "05_Fonts/Manrope-Regular.ttf": {
+    "bytes": 97616,
+    "sha256": "cf92c4459b6e1c7cfa8c3226b1acd9e3a7ae1065e9672bd40b1197d3c74220c4"
+  },
+  "05_Fonts/Manrope-Variable.ttf": {
+    "bytes": 164700,
+    "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6"
+  },
+  "05_Fonts/OFL.txt": {
+    "bytes": 4387,
+    "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+  },
+  "06_Sources/CASA-Avatar-1080.pdf": {
+    "bytes": 243180,
+    "sha256": "67975f05dfdf07be0227840ac20c14ef65fab966c3db281d8141d7d70228342f"
+  },
+  "06_Sources/CASA-Banner-1200x630.pdf": {
+    "bytes": 261660,
+    "sha256": "55b0e38c9317dfba7c65657469110b0ff57d621cfa38428116b00820db7d3127"
+  },
+  "06_Sources/CASA-Brand-Tokens.css": {
+    "bytes": 164,
+    "sha256": "15909c9b5c599cac0d336a5dff6c7d529472786f102849073a5543dab7d88f2f"
+  },
+  "06_Sources/CASA-Brand-Tokens.json": {
+    "bytes": 591,
+    "sha256": "172837f0c6ba6f213422e33326ffcc50f5d2d02c8c38aab1c72b763ed0d8e75b"
+  },
+  "06_Sources/CASA-Social-01-Miteinander-1080.pdf": {
+    "bytes": 270754,
+    "sha256": "694ea4d704c4acdde2224b3e3e450657ca634e49d0a3d67d0704f7e587ee69a9"
+  },
+  "06_Sources/CASA-Social-02-Aufeinander-1080.pdf": {
+    "bytes": 261647,
+    "sha256": "c166c0ca8c623a6e3bd4d0961bf005f2e19c66ec91747355b30241f50faddfaf"
+  },
+  "06_Sources/CASA-Story-1080x1920.pdf": {
+    "bytes": 270742,
+    "sha256": "41bfbf2a66ac114e5fb3ed1321a1bf8cec3f5a485e4e3513c2281a027ca20086"
+  },
+  "06_Sources/CASA-Zwischenraum-Motif.svg": {
+    "bytes": 388,
+    "sha256": "334e6cc8101665b6143cb32f08b88a14073adfde5551d6efee46cb6ef17e38da"
+  },
+  "06_Sources/Generation-brief.txt": {
+    "bytes": 2789,
+    "sha256": "826072da6ee98f1f115a3f68806cddb90db931f984811fdb0e8cf4f9885b5c94"
+  },
+  "CASA-Foerderverein-Brand-Overview.png": {
+    "bytes": 166370,
+    "sha256": "43a6c62f346ccbc8a4ac7444f1ebc9fa62fa837c5f31eac006fe46eabe77fb9a"
+  },
+  "START-HERE.txt": {
+    "bytes": 2952,
+    "sha256": "b7e0296543b8c5c2b384573e24b086e1e6cc67da260582ccdfe12595ee97f6fc"
+  }
+}

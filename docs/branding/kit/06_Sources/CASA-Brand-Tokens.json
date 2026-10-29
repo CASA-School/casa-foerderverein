@@ -1,0 +1,29 @@
+{
+  "name": "CASA Förderverein / Zwischenraum",
+  "colours": {
+    "charcoal": "#18242b",
+    "cyan": "#009fe3",
+    "yellow": "#ffd500",
+    "paper": "#f7f7f2",
+    "white": "#ffffff"
+  },
+  "typography": {
+    "headlines": {
+      "family": "Manrope",
+      "weight": 300
+    },
+    "body": {
+      "family": "Manrope",
+      "weight": 400
+    },
+    "labels": {
+      "family": "Manrope",
+      "weight": 500
+    }
+  },
+  "logo": {
+    "master": "../01_Logos/CASA-Foerderverein-Primary-Transparent.png",
+    "type": "raster artwork; do not retype",
+    "recommendedMinWidthPx": 220
+  }
+}

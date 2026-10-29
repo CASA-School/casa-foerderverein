@@ -1,0 +1,62 @@
+CASA FÖRDERVEREIN - ZWISCHENRAUM
+Branding Kit / Version 1 / 29. Oktober 2026
+
+START
+CASA-Foerderverein-Brand-Overview.png zeigt das System auf einen Blick.
+Die vollständigen Gestaltungsregeln stehen in 02_Guide.
+
+01_LOGOS
+Das freigegebene Primärlogo als transparentes PNG.
+Eine inverse Variante auf dunklem Hintergrund als PNG.
+Der Profil-Avatar in 03_Digital verwendet das Symbol des Primärlogos.
+Die Logo-Dateien sind Rastergrafiken; sie sind keine Vektor-Originale.
+Die inverse Variante wurde mit dem eingebauten Bildwerkzeug abgeleitet.
+Das freigegebene Primärlogo bleibt die Referenz für die Form.
+
+02_GUIDE
+Sieben Seiten zu Idee, Logoverwendung, Schutzraum, Farben, Schrift,
+grafischen Formen und Anwendungen. Dazu eine einseitige Übersicht.
+
+03_DIGITAL
+2 Social Posts: 1080 x 1080 px.
+1 Story: 1080 x 1920 px, mit Abstand zu den oberen und unteren UI-Zonen.
+1 Banner: 1200 x 630 px.
+1 Profil-Avatar: 1080 x 1080 px auf Weiß.
+Alle als PNG; die zugehörigen PDF-Layouts stehen in 06_Sources.
+Beim Veröffentlichen den jeweiligen Profilnamen und Alternativtext ergänzen.
+
+04_PRINT
+A6-Infokarte, Vorder- und Rückseite, Endformat 105 x 148 mm.
+A3-Poster, Endformat 297 x 420 mm.
+Beide PDF-Dateien enthalten 3 mm Beschnitt sowie TrimBox und BleedBox.
+Die Vorschau-PNGs sind zur Ansicht, die PDFs zum Drucken.
+RGB-PDF mit eingebetteten Schriften; kein zertifiziertes PDF/X.
+Für gewerblichen Druck die Farbumwandlung mit der Druckerei abstimmen.
+
+05_FONTS
+Manrope: Light (300), Regular (400), Medium (500) und die variable Datei.
+Die statischen Dateien wurden aus der mitgelieferten variablen Datei erzeugt.
+Die Schriften werden unter der beigefügten SIL Open Font License geliefert.
+Quelle: https://github.com/google/fonts/tree/main/ofl/manrope
+Download: https://raw.githubusercontent.com/google/fonts/main/ofl/manrope/Manrope%5Bwght%5D.ttf
+Das individuelle casa-Logo ist Grafik, keine Manrope-Schriftsetzung.
+
+06_SOURCES
+PDF-Layouts mit Text und Vektorelementen für die digitale Gestaltung.
+Ein natives SVG des ergänzenden grafischen Bogenmotivs (kein Logo-Master).
+Farben und Schriftdefinitionen als CSS und JSON.
+Die Original-PNGs werden unverändert in die Layouts eingesetzt.
+
+TEXT UND INHALT
+Grundlage ist die vom Nutzer gelieferte Beschreibung des Fördervereins.
+Das Leitbild ist: „Miteinander reden – aufeinander zugehen“.
+„Raum für Miteinander“ und „Sprache. Teilhabe. Begegnung.“ sind neue
+Gestaltungsvorschläge, keine überlieferten offiziellen Vereinsslogans.
+Keine Kontaktdaten, Bankverbindungen oder aktuellen Programme wurden erfunden.
+
+QUALITÄTSPRÜFUNG
+Alle sieben Guide-Seiten sowie digitale und Drucklayouts visuell geprüft.
+Umlaute, Textbreiten, Seitengrenzen, Schrift-Einbettung, Exportabmessungen,
+PDF-Seitenzahlen und Druck-Beschnitt wurden geprüft.
+Build/Lint/Typecheck/Unit/E2E wurden nicht ausgeführt: eigenständige
+Gestaltungsdateien ohne Änderung am CASA-Repository oder an der Website.
