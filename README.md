@@ -45,6 +45,15 @@ date and time window are preferences, not confirmed calendar availability.
 It validates answers, supports back navigation and keyboard use, and preserves
 the answers when a request fails. The original animated logo is unchanged.
 
+The fields have consistent hover, focus and error states, clear optional labels,
+autofill hints and email feedback on blur. The region/time dropdowns use
+[Radix Select](https://www.radix-ui.com/primitives/docs/components/select), with
+keyboard selection, typeahead and a portal inside the native modal's top layer.
+Escape closes an open dropdown before the form. Date and time controls stack on
+phones, and requested dates share the server's 90-day limit. A live review shows
+the chosen support topics and meeting preference. Saving locks editable controls,
+announces progress and prevents duplicate submissions; failed saves retain answers.
+
 With `CONTACT_PREVIEW_ENABLED=true` in the ignored `.env.local`, the server saves
 each accepted enquiry to `.local/enquiries/<requestId>.json` with private file
 permissions. Duplicate retries return the original receipt. The form states that
@@ -72,14 +81,19 @@ PayPal and actual calendar bookings are intentionally deferred.
 - `npm run lint`: passed without warnings.
 - `npm run typecheck`: passed.
 - `npm run build`: passed without warnings, including the contact API and privacy route.
-- `npm run test:e2e`: passed, **55 checks** against the production preview.
+- `npm run test:e2e`: passed, **68 checks** against the production preview.
 - Checks cover responsive layouts, readable type, a single sticky-header scroll
   offset, interruptible eased scrolling, reduced motion, native keyboard/focus
   behaviour, company/private-person paths, validation, failed-request recovery,
-  real local persistence, duplicate retries, and PDF downloads.
+  real local persistence, duplicate retries, and PDF downloads. The expanded
+  checks also cover dropdown keyboard/typeahead/Escape behaviour, menu placement
+  at 320/390/768/1440px, blur validation and error focus, preserved region choices,
+  review content, whitespace in names, and locked fields during a controlled save.
 - An additional isolated-server check confirmed that contact capture returns 503
   when the preview flag is disabled. The API's output trace excludes `.local/`.
 - Desktop partnership/footer and desktop/mobile popup screenshots were visually reviewed.
+  The refined fields, mobile time dropdown and enquiry review were inspected again;
+  the production browser session reported zero errors and zero warnings.
 - All four required gates ran. `npm test` aliases the same browser suite; no
   separate unit framework was added. Notes-only updates did not repeat the gates.
 

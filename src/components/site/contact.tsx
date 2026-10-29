@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { ContactSelect } from "@/components/site/contact-select";
 import { OpenSpace } from "@/components/brand/open-space";
 import { berlinToday, contactTopics, enquirySchema, formats, timeWindows, type ContactTopic, type Enquiry } from "@/lib/contact/schema";
 
@@ -28,6 +29,8 @@ export function ContactButton({ children, className = "", topic, kind, onClick }
 type Draft = Omit<Enquiry, "requestId" | "privacyAcknowledged" | "website"> & { privacyAcknowledged: boolean };
 type FieldName = keyof Draft;
 const stepNames = ["Ihre Idee", "Kontakt", "Gespräch"];
+const locations = [{ value: "bremen", label: "Bremen", detail: "In der Stadt zu Hause" }, { value: "umland", label: "Bremer Umland", detail: "Aus der Region verbunden" }, { value: "anderswo", label: "Ein anderer Ort", detail: "Eine Verbindung kennt keine Stadtgrenze" }] as const;
+const meetingWindows = Object.entries(timeWindows).map(([value, label]) => ({ value: value as NonNullable<Enquiry["timeWindow"]>, label: label.split(" · ")[0], detail: label.split(" · ")[1] }));
 const titles = ["Wie möchten Sie sich einbringen?", "Lernen wir uns kennen.", "Wie passt es Ihnen?"];
 
 function ContactDialog({ opening, onClose }: { opening: Opening; onClose: () => void }) {
@@ -62,6 +65,7 @@ function ContactDialog({ opening, onClose }: { opening: Opening; onClose: () => 
   }, []);
 
   function setField<K extends FieldName>(field: K, value: Draft[K]) {
+    requestId.current = "";
     setDraft(previous => ({ ...previous, [field]: value }));
     setErrors(previous => { const next = { ...previous }; delete next[field]; return next; });
     setFailure("");
@@ -85,7 +89,7 @@ function ContactDialog({ opening, onClose }: { opening: Opening; onClose: () => 
     }
     setErrors(next);
     const first = Object.keys(next)[0];
-    if (first) requestAnimationFrame(() => dialog.current?.querySelector<HTMLElement>(`[data-field="${first}"] input, [data-field="${first}"] select`)?.focus());
+    if (first) focusField(first);
     return !first;
   }
 
@@ -99,7 +103,7 @@ function ContactDialog({ opening, onClose }: { opening: Opening; onClose: () => 
       const fields: Record<string, string> = {};
       result.error.issues.forEach(issue => { fields[String(issue.path[0])] ??= issue.message; });
       setErrors(fields);
-      requestAnimationFrame(() => dialog.current?.querySelector<HTMLElement>(`[data-field="${Object.keys(fields)[0]}"] input`)?.focus());
+      focusField(Object.keys(fields)[0]);
       return;
     }
     setPending(true);
@@ -120,14 +124,29 @@ function ContactDialog({ opening, onClose }: { opening: Opening; onClose: () => 
     } finally { setPending(false); }
   }
 
+  function focusField(field: string) {
+    requestAnimationFrame(() => dialog.current?.querySelector<HTMLElement>(`[data-field="${field}"] input, [data-field="${field}"] [role="combobox"], [data-field="${field}"] textarea`)?.focus());
+  }
+
+  function validateField(field: "name" | "organisation" | "role" | "email" | "phone") {
+    const value = draft[field].trim();
+    if (!value) return; // Explain empty required fields when the visitor continues.
+    let error = "";
+    if (field === "email" && !enquirySchema.shape.email.safeParse(value).success) error = "Bitte geben Sie eine gültige E-Mail-Adresse an.";
+    if (field === "name" && value.length < 2) error = "Bitte geben Sie Ihren Namen an.";
+    if (field === "organisation" && draft.kind !== "privat" && value.length < 2) error = "Bitte nennen Sie Ihr Unternehmen oder Ihre Organisation.";
+    setErrors(previous => { const next = { ...previous }; if (error) next[field] = error; else delete next[field]; return next; });
+  }
+
   function fieldError(field: FieldName) {
     return errors[field] ? <p className="field-error" id={`${id}-${field}-error`} role="alert">{errors[field]}</p> : null;
   }
 
-  function input(field: "name" | "organisation" | "role" | "email" | "phone", label: string, options: { type?: string; optional?: boolean; autoComplete?: string; placeholder?: string } = {}) {
+  function input(field: "name" | "organisation" | "role" | "email" | "phone", label: string, options: { type?: string; optional?: boolean; autoComplete?: string; placeholder?: string; hint?: string } = {}) {
     return <div className="contact-field" data-field={field}>
       <label htmlFor={`${id}-${field}`}>{label}{options.optional && <span> optional</span>}</label>
-      <input id={`${id}-${field}`} name={field} type={options.type ?? "text"} value={draft[field]} onChange={event => setField(field, event.target.value)} autoComplete={options.autoComplete} placeholder={options.placeholder} maxLength={field === "email" ? 254 : field === "phone" ? 40 : field === "organisation" ? 160 : 100} aria-invalid={!!errors[field]} aria-describedby={errors[field] ? `${id}-${field}-error` : undefined} required={!options.optional} />
+      <input onBlur={() => validateField(field)} disabled={pending} id={`${id}-${field}`} name={field} type={options.type ?? "text"} value={draft[field]} onChange={event => setField(field, event.target.value)} autoComplete={options.autoComplete} placeholder={options.placeholder} maxLength={field === "email" ? 254 : field === "phone" ? 40 : field === "organisation" ? 160 : 100} aria-invalid={!!errors[field]} aria-describedby={[options.hint && `${id}-${field}-hint`, errors[field] && `${id}-${field}-error`].filter(Boolean).join(" ") || undefined} required={!options.optional} />
+      {options.hint && <p className="field-hint" id={`${id}-${field}-hint`}>{options.hint}</p>}
       {fieldError(field)}
     </div>;
   }
@@ -154,11 +173,11 @@ function ContactDialog({ opening, onClose }: { opening: Opening; onClose: () => 
         <span className="contact-preview-tag"><span className="square" />Lokale Vorschau</span>
       </aside>
       <div className="contact-main">
-        <button type="button" className="contact-close" aria-label="Kontaktfenster schließen" onClick={() => dialog.current?.close()}><span aria-hidden="true">×</span></button>
+        <button type="button" className="contact-close" aria-label="Kontaktfenster schließen" onClick={() => dialog.current?.close()}><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" /></svg></button>
         {receipt ? <div className="contact-success">
           <span className="success-symbol" aria-hidden="true">↗</span>
           <p className="eyebrow">Der erste Schritt ist gemacht.</p>
-          <h2 ref={heading} tabIndex={-1} id={`${id}-title`}>Danke, {draft.name.split(" ")[0]}.</h2>
+          <h2 ref={heading} tabIndex={-1} id={`${id}-title`}>Danke, {draft.name.trim().split(/\s+/)[0]}.</h2>
           <p id={`${id}-description`}>Ihre Anfrage wurde lokal gespeichert.</p>
           <div className="contact-receipt"><span>Ihre Referenz</span><strong>{receipt}</strong></div>
           <p className="contact-success-note">In dieser Vorschau wird keine E-Mail verschickt. Ein Termin ist noch nicht vereinbart.</p>
@@ -166,44 +185,51 @@ function ContactDialog({ opening, onClose }: { opening: Opening; onClose: () => 
         </div> : <form noValidate onSubmit={submit} className="contact-form" aria-busy={pending}>
           <div className="contact-scroll">
             <nav aria-label="Schritte der Kontaktanfrage" className="contact-steps">
-              {stepNames.map((name, index) => <button key={name} type="button" disabled={index >= step || pending} onClick={() => moveTo(index)} aria-current={index === step ? "step" : undefined}><span>0{index + 1}</span>{name}</button>)}
+              {stepNames.map((name, index) => <button key={name} type="button" disabled={index >= step || pending} onClick={() => moveTo(index)} data-complete={index < step || undefined} aria-current={index === step ? "step" : undefined}><span>{index < step ? <><span aria-hidden="true">✓</span><span className="sr-only">Abgeschlossen, Schritt {index + 1}</span></> : `0${index + 1}`}</span>{name}</button>)}
             </nav>
             <h2 ref={heading} tabIndex={-1} id={`${id}-title`}>{titles[step]}</h2>
             <p id={`${id}-description`} className="contact-description">{step === 0 ? "Ob Unternehmen, Initiative oder Privatperson: Jede gute Verbindung beginnt mit Ihrer Idee." : step === 1 ? "Ein paar Angaben helfen uns, die passende Verbindung herzustellen." : "Wählen Sie, wie wir ins Gespräch kommen könnten. Wünsche sind noch keine Terminbuchung."}</p>
 
+            <fieldset className="contact-current-step" aria-label={stepNames[step]} disabled={pending}>
             {step === 0 && <div className="contact-step-content">
               <fieldset className="contact-kind"><legend>Ich melde mich als</legend><div className="choice-group">
                 {([['unternehmen', 'Unternehmen'], ['organisation', 'Organisation'], ['privat', 'Privatperson']] as const).map(([value, label]) => <label key={value} className={draft.kind === value ? "selected" : ""}><input type="radio" name="kind" value={value} checked={draft.kind === value} onChange={() => setField("kind", value)} />{label}</label>)}
               </div></fieldset>
               <fieldset className="contact-topics" data-field="topics"><legend>Darüber möchte ich sprechen <span>Mehrfachauswahl möglich</span></legend>
-                {contactTopics.map(topic => <label key={topic.value} className={`topic-choice ${draft.topics.includes(topic.value) ? "selected" : ""}`}><input type="checkbox" name="topics" value={topic.value} checked={draft.topics.includes(topic.value)} onChange={() => setField("topics", draft.topics.includes(topic.value) ? draft.topics.filter(value => value !== topic.value) : [...draft.topics, topic.value])} /><span><strong>{topic.title}</strong><span>{topic.detail}</span></span></label>)}
+                {contactTopics.map(topic => <label key={topic.value} className={`topic-choice ${draft.topics.includes(topic.value) ? "selected" : ""}`}><input type="checkbox" name="topics" value={topic.value} aria-invalid={!!errors.topics} aria-describedby={errors.topics ? `${id}-topics-error` : undefined} checked={draft.topics.includes(topic.value)} onChange={() => setField("topics", draft.topics.includes(topic.value) ? draft.topics.filter(value => value !== topic.value) : [...draft.topics, topic.value])} /><span><strong>{topic.title}</strong><span>{topic.detail}</span></span></label>)}
                 {fieldError("topics")}
               </fieldset>
             </div>}
 
             {step === 1 && <div className="contact-step-content contact-fields">
-              {input("name", "Ihr Name", { autoComplete: "name" })}
-              {draft.kind !== "privat" && <>{input("organisation", draft.kind === "unternehmen" ? "Unternehmen" : "Organisation", { autoComplete: "organization" })}{input("role", "Ihre Funktion", { autoComplete: "organization-title", optional: true })}</>}
-              {input("email", draft.kind === "unternehmen" ? "Geschäftliche E-Mail" : "E-Mail", { type: "email", autoComplete: "email" })}
-              <div className="contact-field"><label htmlFor={`${id}-location`}>Wo sind Sie zu Hause?</label><select id={`${id}-location`} value={draft.location} onChange={event => setField("location", event.target.value as Draft["location"])}><option value="bremen">Bremen</option><option value="umland">Bremer Umland</option><option value="anderswo">Ein anderer Ort</option></select></div>
+              <p className="contact-fields-note">Nur die als optional markierten Angaben können Sie freilassen.</p>
+              {input("name", "Ihr Name", { autoComplete: "name", placeholder: "Vor- und Nachname" })}
+              {draft.kind !== "privat" && <>{input("organisation", draft.kind === "unternehmen" ? "Unternehmen" : "Organisation", { autoComplete: "organization" })}{input("role", "Ihre Funktion", { autoComplete: "organization-title", optional: true, placeholder: "z. B. Geschäftsführung" })}</>}
+              {input("email", draft.kind === "unternehmen" ? "Geschäftliche E-Mail" : "E-Mail", { type: "email", autoComplete: "email", placeholder: draft.kind === "unternehmen" ? "name@unternehmen.de" : "name@beispiel.de", hint: "Bitte eine Adresse angeben, unter der Sie erreichbar sind." })}
+              <ContactSelect id={`${id}-location`} name="location" label="Wo sind Sie zu Hause?" value={draft.location} options={locations} onChange={value => setField("location", value)} disabled={pending} hint="Wir freuen uns über Verbindungen aus Bremen und darüber hinaus." />
             </div>}
 
             {step === 2 && <div className="contact-step-content">
               <fieldset><legend>Wie möchten Sie sprechen?</legend><div className="choice-group format-choices">{Object.entries(formats).map(([value, label]) => <label key={value} className={draft.format === value ? "selected" : ""}><input type="radio" name="format" value={value} checked={draft.format === value} onChange={() => setField("format", value as Draft["format"])} />{label}</label>)}</div></fieldset>
-              {draft.format === "telefon" && input("phone", "Telefon für den Rückruf", { type: "tel", autoComplete: "tel", placeholder: "+49 …" })}
+              {draft.format === "telefon" && input("phone", "Telefon für den Rückruf", { type: "tel", autoComplete: "tel", placeholder: "+49 …", hint: "Nur für den gewünschten Rückruf erforderlich." })}
               <fieldset className="timing-choices"><legend>Wann passt es Ihnen?</legend>{([['flexibel','Flexibel abstimmen'],['wunschtermin','Einen Termin vorschlagen']] as const).map(([value,label]) => <label key={value}><input type="radio" name="timing" value={value} checked={draft.timing === value} onChange={() => setField("timing", value)} />{label}</label>)}</fieldset>
               {draft.timing === "wunschtermin" && <div className="contact-date-grid">
-                <div className="contact-field" data-field="date"><label htmlFor={`${id}-date`}>Ihr Wunschdatum</label><input type="date" id={`${id}-date`} min={berlinToday()} value={draft.date} onChange={event => setField("date",event.target.value)} aria-invalid={!!errors.date} aria-describedby={errors.date ? `${id}-date-error` : undefined} />{fieldError("date")}</div>
-                <div className="contact-field"><label htmlFor={`${id}-window`}>Zeitraum · Bremer Zeit</label><select id={`${id}-window`} value={draft.timeWindow} onChange={event => setField("timeWindow",event.target.value as Draft["timeWindow"])}>{Object.entries(timeWindows).map(([value,label]) => <option key={value} value={value}>{label}</option>)}</select></div>
+                <div className="contact-field" data-field="date"><label htmlFor={`${id}-date`}>Ihr Wunschdatum</label><input type="date" id={`${id}-date`} min={berlinToday()} max={new Date(Date.parse(`${berlinToday()}T12:00:00Z`) + 90 * 86400000).toISOString().slice(0, 10)} required value={draft.date} onChange={event => setField("date",event.target.value)} aria-invalid={!!errors.date} aria-describedby={errors.date ? `${id}-date-error` : undefined} />{fieldError("date")}</div>
+                <ContactSelect id={`${id}-window`} name="timeWindow" label="Zeitraum · Bremer Zeit" value={draft.timeWindow ?? "vormittags"} options={meetingWindows} onChange={value => setField("timeWindow", value)} error={errors.timeWindow} disabled={pending} />
               </div>}
-              <div className="contact-field"><label htmlFor={`${id}-message`}>Was möchten Sie gemeinsam bewegen? <span>optional</span></label><textarea id={`${id}-message`} rows={3} maxLength={2000} value={draft.message} onChange={event => setField("message",event.target.value)} placeholder="Zum Beispiel eine Idee für eine Kooperation oder die Unterstützung eines Lernwegs …" /><span className="character-count">{draft.message.length} / 2.000 Zeichen</span></div>
-              <div className="contact-summary"><div><strong>{draft.name}{draft.kind !== "privat" && ` · ${draft.organisation}`}</strong><span>{draft.email}</span></div><button type="button" onClick={() => moveTo(1)}>Bearbeiten</button></div>
+              <div className="contact-field"><label htmlFor={`${id}-message`}>Was möchten Sie gemeinsam bewegen? <span>optional</span></label><textarea id={`${id}-message`} rows={3} maxLength={2000} value={draft.message} onChange={event => setField("message",event.target.value)} aria-describedby={`${id}-message-count`} placeholder="Ihre Idee, eine mögliche Kooperation oder eine Frage an uns …" /><span className="character-count" id={`${id}-message-count`}>{draft.message.length} / 2.000 Zeichen</span></div>
+              <section className="contact-summary" aria-label="Ihre Anfrage im Überblick">
+                <div className="contact-summary-heading"><h3>Ihre Verbindung zu CASA</h3><button type="button" disabled={pending} onClick={() => moveTo(1)}>Bearbeiten</button></div>
+                <div className="contact-summary-person"><strong>{draft.name}{draft.kind !== "privat" && ` · ${draft.organisation}`}</strong><span>{draft.email}</span></div>
+                <dl><div><dt>Ihr Beitrag</dt><dd>{contactTopics.filter(topic => draft.topics.includes(topic.value)).map(topic => topic.title).join(" · ")}</dd></div><div><dt>Gesprächswunsch</dt><dd>{formats[draft.format]}{draft.timing === "flexibel" ? " · flexibel abstimmen" : draft.date && !Number.isNaN(Date.parse(`${draft.date}T12:00:00Z`)) ? ` · ${new Intl.DateTimeFormat("de-DE", { day: "numeric", month: "long", timeZone: "Europe/Berlin" }).format(new Date(`${draft.date}T12:00:00Z`))}, ${timeWindows[draft.timeWindow ?? "vormittags"]}` : " · Datum noch offen"}</dd></div></dl>
+              </section>
               <div className="preview-disclosure"><span className="square" /><p><strong>Nur eine lokale Vorschau.</strong> Ihre Angaben werden auf dem Rechner dieser Vorschau gespeichert. Es wird keine E-Mail verschickt und kein Termin gebucht.</p></div>
-              <div className="consent-field" data-field="privacyAcknowledged"><label><input type="checkbox" checked={draft.privacyAcknowledged} onChange={event => setField("privacyAcknowledged",event.target.checked)} />Ich habe den Hinweis zur lokalen Vorschau gelesen.</label><a href="/datenschutz" target="_blank" rel="noopener noreferrer">Datenschutzhinweise öffnen ↗</a>{fieldError("privacyAcknowledged")}</div>
+              <div className="consent-field" data-field="privacyAcknowledged"><label><input type="checkbox" aria-invalid={!!errors.privacyAcknowledged} aria-describedby={errors.privacyAcknowledged ? `${id}-privacyAcknowledged-error` : undefined} checked={draft.privacyAcknowledged} onChange={event => setField("privacyAcknowledged",event.target.checked)} />Ich habe den Hinweis zur lokalen Vorschau gelesen.</label><a href="/datenschutz" target="_blank" rel="noopener noreferrer">Datenschutzhinweise öffnen ↗</a>{fieldError("privacyAcknowledged")}</div>
             </div>}
+            </fieldset>
             {failure && <div className="contact-failure" role="alert">{failure}</div>}
           </div>
-          <div className="contact-actions"><span className="contact-step-counter">Schritt {step + 1} von 3</span>{step > 0 && <button type="button" className="back-action" disabled={pending} onClick={() => moveTo(step - 1)}>Zurück</button>}<button type="submit" className="primary-action" disabled={pending}>{pending ? "Wird gespeichert …" : step === 2 ? "Anfrage lokal speichern" : "Weiter"}<span aria-hidden="true">{pending ? "…" : "↗"}</span></button></div>
+          <div className="contact-actions"><span className="sr-only" role="status">{pending ? "Ihre Anfrage wird lokal gespeichert." : ""}</span><span className="contact-step-counter">Schritt {step + 1} von 3</span>{step > 0 && <button type="button" className="back-action" disabled={pending} onClick={() => moveTo(step - 1)}>Zurück</button>}<button type="submit" className="primary-action" disabled={pending}>{pending ? "Wird gespeichert …" : step === 2 ? "Anfrage lokal speichern" : "Weiter"}<span aria-hidden="true" className={pending ? "contact-spinner" : undefined}>{pending ? "" : "↗"}</span></button></div>
         </form>}
       </div>
     </div>
