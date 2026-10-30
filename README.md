@@ -115,6 +115,10 @@ They reuse a running preview on port 3016 or start a built preview for the check
 
 ## Publication state
 
+Deployment status and DNS rollback records are in [the deployment record](docs/DEPLOYMENT.md).
+The repository is published at https://github.com/CASA-School/casa-foerderverein.
+Vercel account verification is pending; domains have not yet been changed.
+
 On 2026-10-30 the user authorized publishing this project to the CASA GitHub
 organisation, deploying it to the CASA Vercel account and connecting both Hostinger
 domains. The target primary address is `https://casa-foerderverein.de`;
