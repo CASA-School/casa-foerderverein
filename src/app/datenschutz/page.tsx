@@ -1,7 +1,18 @@
 import Link from "next/link";
+import { localContactPreviewEnabled } from "@/lib/contact/preview";
 import { Logo } from "@/components/brand/logo";
 
 export default function Privacy() {
+  if (!localContactPreviewEnabled()) return <main className="privacy-page container">
+    <Link href="/" aria-label="Zur Startseite"><Logo /></Link>
+    <p className="section-index">Hinweise zur Projektvorschau</p>
+    <h1>Transparent.<br />Von Anfang an.</h1>
+    <p className="lead">Diese Website zeigt den aktuellen Entwurf für den CASA-Förderverein. Die Online-Kontaktanfrage ist noch nicht freigeschaltet.</p>
+    <section><h2>Kontaktanfragen</h2><p>In dieser veröffentlichten Vorschau werden keine Kontaktformulareingaben entgegengenommen. Es werden keine E-Mails versandt, Termine gebucht oder Zahlungen abgewickelt.</p></section>
+    <section><h2>Bereitstellung der Vorschau</h2><p>Die veröffentlichte Vorschau wird über Vercel bereitgestellt. Beim Aufruf werden technische Verbindungsdaten für die Auslieferung der Website verarbeitet. Schriftdateien werden von dieser Website geladen. Analyse- und Werbedienste, externe Buchungsdienste und Zahlungsdienste sind nicht eingebunden.</p></section>
+    <section><h2>Vor dem vollständigen Start</h2><p>Die Angaben zur verantwortlichen Stelle, das Impressum und die vollständigen Datenschutzhinweise werden noch vorbereitet. Suchmaschinen sind angewiesen, die Projektvorschau nicht zu indexieren.</p></section>
+    <Link className="text-link" href="/">Zurück zur Website <span aria-hidden="true">↗</span></Link>
+  </main>;
   return <main className="privacy-page container">
     <Link href="/" aria-label="Zur Startseite"><Logo /></Link>
     <p className="section-index">Hinweise zur lokalen Vorschau</p>

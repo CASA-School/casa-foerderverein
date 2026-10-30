@@ -1,3 +1,4 @@
+import { localContactPreviewEnabled } from "@/lib/contact/preview";
 import { enquirySchema } from "@/lib/contact/schema";
 import { DuplicateEnquiryError, savePreviewEnquiry } from "@/lib/contact/store";
 
@@ -11,7 +12,7 @@ function error(message: string, status: number, fields?: Record<string, string>)
 
 export async function POST(request: Request) {
   // Explicit opt-in only. A public deployment must not silently use preview storage.
-  if (process.env.CONTACT_PREVIEW_ENABLED !== "true") return error("Die Kontaktfunktion ist noch nicht freigeschaltet.", 503);
+  if (!localContactPreviewEnabled()) return error("Die Kontaktfunktion ist noch nicht freigeschaltet.", 503);
   // Next can normalize loopback request.url to localhost. Compare against the
   // browser-facing Host (or an explicitly configured public URL), not that alias.
   const host = request.headers.get("host");

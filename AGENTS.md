@@ -14,7 +14,7 @@ are references, not working directories for this project.
 - The source copy is `docs/source-copy.md`. Separate the association from the school.
 - B1 preparation and scholarships are planned, not open programmes.
 - Do not invent registration, donation, banking, contact, legal or tax details.
-- No publishing, hosting, domain changes or remote Git actions without user authorization.
+- On 2026-10-30 the user authorized CASA GitHub publication (public if required by Vercel Hobby), deployment in the CASA Vercel account and connection of both Hostinger domains. Keep the hosted site noindex and the hosted enquiry capture disabled until real delivery/legal details are approved. Further unrelated external changes still require authorization.
 
 ## Stack and checks
 - CASA stack: Next.js App Router 16.4.3, React 19.2.4, TypeScript, Tailwind 4.

@@ -115,11 +115,23 @@ They reuse a running preview on port 3016 or start a built preview for the check
 
 ## Publication state
 
-This is a local preview, with `noindex` metadata and a robots exclusion. Association
-contact, imprint and privacy information must be verified before public launch.
-The partnership contact form captures local preview enquiries only. There are no
-donation or application forms, outbound messages or invented contact details.
-No hosting, domain or GitHub configuration has been created.
+On 2026-10-30 the user authorized publishing this project to the CASA GitHub
+organisation, deploying it to the CASA Vercel account and connecting both Hostinger
+domains. The target primary address is `https://casa-foerderverein.de`;
+`casa-verein.de` and the `www` variants redirect to it.
+
+This remains a project preview with `noindex` metadata and a robots exclusion.
+Association contact, imprint and complete privacy information are still needed.
+On Vercel, both the contact UI and API refuse local-preview data capture even if
+`CONTACT_PREVIEW_ENABLED=true` is accidentally configured. The public popup
+explains that online enquiries are being prepared, without collecting answers.
+The local three-step form remains available on this laptop. The public privacy
+page describes the hosted preview rather than claiming it is a private local site.
+There are no donations, outbound messages or calendar bookings.
+
+Vercel should build from Git, with no `.env.local` or private enquiry records.
+The optional `SITE_URL` is `https://casa-foerderverein.de`; the hosted fallback is
+also that canonical address. Keep local-preview variables off in Vercel.
 
 ## Codex organization
 

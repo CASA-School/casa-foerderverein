@@ -8,12 +8,12 @@ import { berlinToday, contactTopics, enquirySchema, formats, timeWindows, type C
 type Opening = { topic?: ContactTopic; kind?: Enquiry["kind"] };
 const ContactContext = createContext<((opening?: Opening, trigger?: HTMLElement) => void) | null>(null);
 
-export function ContactProvider({ children }: { children: ReactNode }) {
+export function ContactProvider({ children, previewEnabled }: { children: ReactNode; previewEnabled: boolean }) {
   const [opening, setOpening] = useState<Opening | null>(null);
   const returnFocus = useRef<HTMLElement | null>(null);
   return <ContactContext.Provider value={(options = {}, trigger) => { returnFocus.current = trigger ?? null; setOpening(options); }}>
     {children}
-    {opening && <ContactDialog opening={opening} onClose={() => {
+    {opening && <ContactDialog opening={opening} previewEnabled={previewEnabled} onClose={() => {
       setOpening(null);
       const target = returnFocus.current?.isConnected ? returnFocus.current : document.querySelector<HTMLElement>(".menu-toggle");
       requestAnimationFrame(() => target?.focus({ preventScroll: true }));
@@ -33,7 +33,7 @@ const locations = [{ value: "bremen", label: "Bremen", detail: "In der Stadt zu 
 const meetingWindows = Object.entries(timeWindows).map(([value, label]) => ({ value: value as NonNullable<Enquiry["timeWindow"]>, label: label.split(" · ")[0], detail: label.split(" · ")[1] }));
 const titles = ["Wie möchten Sie sich einbringen?", "Lernen wir uns kennen.", "Wie passt es Ihnen?"];
 
-function ContactDialog({ opening, onClose }: { opening: Opening; onClose: () => void }) {
+function ContactDialog({ opening, onClose, previewEnabled }: { opening: Opening; onClose: () => void; previewEnabled: boolean }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const requestId = useRef("");
@@ -170,11 +170,19 @@ function ContactDialog({ opening, onClose }: { opening: Opening; onClose: () => 
         <h2>Aus einer Idee<br />wird<br />Miteinander.</h2>
         <OpenSpace className="contact-art" dark />
         <p>Bremen verbindet.<br />Gemeinsam öffnen wir Lernwege.</p>
-        <span className="contact-preview-tag"><span className="square" />Lokale Vorschau</span>
+        <span className="contact-preview-tag"><span className="square" />{previewEnabled ? "Lokale Vorschau" : "Projektvorschau"}</span>
       </aside>
       <div className="contact-main">
         <button type="button" className="contact-close" aria-label="Kontaktfenster schließen" onClick={() => dialog.current?.close()}><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" /></svg></button>
-        {receipt ? <div className="contact-success">
+        {!previewEnabled ? <div className="contact-success">
+          <span className="success-symbol" aria-hidden="true">↗</span>
+          <p className="eyebrow">Ein Gespräch ist ein Anfang.</p>
+          <h2 ref={heading} tabIndex={-1} id={`${id}-title`}>Gute Verbindungen brauchen einen Anfang.</h2>
+          <p id={`${id}-description`}>Unsere Online-Kontaktanfrage wird vorbereitet.</p>
+          <p className="contact-success-note">Diese Website ist eine Projektvorschau. Aktuell können hier noch keine Kontaktdaten übermittelt oder Gespräche angefragt werden.</p>
+          <a className="text-link" href="/datenschutz">Hinweise zur Vorschau <span aria-hidden="true">↗</span></a>
+          <button className="primary-action" onClick={() => dialog.current?.close()}>Zurück zur Website <span aria-hidden="true">↗</span></button>
+        </div> : receipt ? <div className="contact-success">
           <span className="success-symbol" aria-hidden="true">↗</span>
           <p className="eyebrow">Der erste Schritt ist gemacht.</p>
           <h2 ref={heading} tabIndex={-1} id={`${id}-title`}>Danke, {draft.name.trim().split(/\s+/)[0]}.</h2>
