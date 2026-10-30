@@ -117,7 +117,10 @@ They reuse a running preview on port 3016 or start a built preview for the check
 
 Deployment status and DNS rollback records are in [the deployment record](docs/DEPLOYMENT.md).
 The repository is published at https://github.com/CASA-School/casa-foerderverein.
-Vercel account verification is pending; domains have not yet been changed.
+The site is deployed in the CASA Vercel account at https://casa-foerderverein.de;
+https://casa-verein.de and both `www` addresses redirect to it over HTTPS.
+All four custom domains show Valid Configuration in Vercel. Hostinger continues
+to manage DNS. Future pushes to `main` deploy through the Vercel Git integration.
 
 On 2026-10-30 the user authorized publishing this project to the CASA GitHub
 organisation, deploying it to the CASA Vercel account and connecting both Hostinger
